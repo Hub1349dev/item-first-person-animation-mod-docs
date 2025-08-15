@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -56,11 +57,10 @@
       <div class="separator"></div>
       <div class="separator"></div>
 
-
       <h4>Requisitos antes de empezar</h4>
 
       <pre><code>
-- Tener Minecraft Fabric 1.21.1 o al menos 1.17.0+
+- Tener Minecraft Fabric 1.21.1 y version de fabric al menos 1.17.0+
 - Tener GeckoLib 4.7.6 para Fabric 1.21.1
 - Tener al menos Fabric API 0.116.4+
   </code></pre>
@@ -89,9 +89,9 @@
 
       <h4>Primer paso</h4>
 
-      <p>Abre el <code>.jar</code> con WinRAR y entra a la carpeta <code>assets/itemfirstpersonaniamtionshexa</code>.</p>
+      <p>Ve a la carpeta de tu instancia de Minecraft y busca la ruta <code>runtime/config/itemfirstpersonanimationshexa/</code>.</p>
 
-      <p>Ahí encontrarás un archivo llamado <code>animation_config.json</code>, que vas a abrir con un editor de texto.</p>
+      <p>Ahí encontrarás un archivo llamado <code>animation_config.json</code>, que puedes abrir directamente con cualquier editor de texto.</p>
 
       <div class="separator"></div>
       <div class="separator"></div>
@@ -177,8 +177,13 @@
 
       <h4>Segundo paso</h4>
 
-      <p>Abre el WinRAR de nuevo, y en la misma carpeta donde estaba el animation_config.json, </p>
-      <p>colocas el archivo de animación en animations/ y el archivo .geo en geo/ dentro del <code>.jar</code>.</p>
+      <p>Coloca tus archivos de animación (.animation.json) en la carpeta <code>runtime/config/itemfirstpersonanimationshexa/animations/</code></p>
+      <p>y los archivos de modelo (.geo.json) en la carpeta <code>runtime/config/itemfirstpersonanimationshexa/geo/</code></p>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <p><strong>Nota:</strong> Si las carpetas <code>animations/</code> y <code>geo/</code> no existen, créalas manualmente.</p>
 
       <div class="separator"></div>
       <div class="separator"></div>
@@ -194,18 +199,12 @@
       <div class="separator"></div>
       <div class="separator"></div>
       <div class="separator"></div>
-
-      <h4>Nota: si en el WinRAR no te deja editar el archivo animation_config.json, elimínalo,</h4>
-      <h4>dale click derecho al WinRAR en el directorio de ese archivo y dale a Add Files to Archive, ahi creas un documento de texto en una carpeta, llamado animation_config.json,</h4>
-      <h4>lo abres con bloc de notas, pegas el contenido de ejemplo y de ahi lo cambias </h4>
-
-      <div class="separator"></div>
     </div>
 
     <div id="revision" class="tab-content" style="display: none;">
       <h2><img src="assets/scan-search.svg" alt="Scan Search" width="24" height="24">Revision</h2>
       <div class="separator"></div>
-      <p>Una vez todo listo, recuerda guardar todos los cambios hechos en el mod, y revisa estas cosas para asegurarte del funcionamiento:</p>
+      <p>Una vez todo listo, recuerda guardar todos los cambios hechos en el archivo de configuración, y revisa estas cosas para asegurarte del funcionamiento:</p>
       <p>Asegurate que los nombres que pusiste en el archivo (en este caso akanimgecko.animation.json),</p>
       <p>sean los mismos que el nombre del archivo completo incluso con formato, </p>
       <p>además de iniciar el modelo con geo/ y animación con animations/ en el JSON</p>
@@ -242,16 +241,13 @@
 
       <p>Concluido esto, pueden ir a la siguiente pagina llamada Aplicación.</p>
 
-
     </div>
 
     <div id="aplicacion" class="tab-content" style="display: none;">
       <h2><img src="assets/layers.svg" alt="Layers" width="24" height="24">Aplicación</h2>
       <div class="separator"></div>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi</p>
-      <p>Architecto beatae vitae dicta sunt explicabo</p>
-      <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur</p>
-      <p>Aut odit aut fugit, sed quia consequuntur magni dolores</p>
+      <p>Ejecutar el minecraft siguiendo lo que debes hacer y que funcione 👍</p>
+
     </div>
   </div>
 </div>

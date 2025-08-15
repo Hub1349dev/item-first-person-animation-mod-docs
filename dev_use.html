@@ -30,7 +30,515 @@
 
 <div class="separator"></div>
 
-<h1>Uso de desarrollador</h1>
+<h1>Item First Person Animation - Uso de desarrollador</h1>
+
+<div class="separator"></div>
+<div class="separator"></div>
+<div class="separator"></div>
+<div class="separator"></div>
+
+<div class="docs-layout">
+  <div class="docs-sidebar-content">
+    <p><button class="tab-link" data-tab="dependencia"><img src="assets/settings.svg" alt="Dependency" width="20" height="20"> Implementación</button></p>
+    <p><button class="tab-link" data-tab="triggers-custom"><img src="assets/message-square-code.svg" alt="Custom Triggers" width="20" height="20"> Triggers Custom</button></p>
+    <p><button class="tab-link" data-tab="ejemplos"><img src="assets/layers.svg" alt="Examples" width="20" height="20"> Ejemplos</button></p>
+  </div>
+
+  <div class="content-container">
+    <div id="dependencia" class="tab-content">
+      <h2>
+        <img src="assets/settings.svg" alt="Settings" width="24" height="24">
+        Implementación
+      </h2>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Requisitos antes de empezar</h4>
+
+      <pre><code>
+- Tener Minecraft Fabric 1.21.1 y version de fabric al menos 1.17.0+
+- Tener GeckoLib 4.7.6 para Fabric 1.21.1
+- Tener al menos Fabric API 0.116.4+
+- Un mod fabric configurado y funcionando
+      </code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Primer paso - Configurar el build.gradle</h4>
+
+      <p>Necesitas agregar el repositorio y la dependencia del mod en tu <code>build.gradle</code>.</p>
+
+      <p>En la sección de repositories, agrega esto:</p>
+
+      <pre><code>repositories {
+    maven {
+        name = 'GeckoLib'
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
+
+    // Para ItemFirstPersonAnimationsHEXA
+    flatDir {
+        dirs 'libs'
+    }
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <p>En la sección de dependencies, agrega esto:</p>
+
+      <pre><code>dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${project.minecraft_version}:${project.geckolib_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // ItemFirstPersonAnimationsHEXA como dependencia
+    modImplementation name: 'itemfirstpersonanimationshexa', version: '1.0.0'
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Segundo paso - El archivo .jar en libs</h4>
+
+      <p>Crea una carpeta llamada <code>libs</code> en la raíz de tu proyecto (al mismo nivel que <code>src</code>).</p>
+
+      <p>Ahí metes el archivo <code>itemfirstpersonanimationshexa-1.0.0.jar</code> del mod.</p>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Tercer paso - fabric.mod.json</h4>
+
+      <p>En tu <code>fabric.mod.json</code>, agrega la dependencia:</p>
+
+      <pre><code>{
+  "schemaVersion": 1,
+  "id": "tu_mod_id",
+  "version": "1.0.0",
+  "name": "Tu Mod",
+
+  "entrypoints": {
+    "client": [
+      "tu.paquete.client.TuModClient"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "geckolib": ">=4.7.6",
+    "itemfirstpersonanimationshexa": "*"
+  }
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Cuarto paso - Estructura del proyecto</h4>
+
+      <p>Tu proyecto debe quedar así:</p>
+
+      <pre><code>tu-mod/
+├── libs/
+│   └── itemfirstpersonanimationshexa-1.0.0.jar
+├── src/main/java/
+│   └── tu/paquete/client/
+│       └── TuModClient.java
+├── src/main/resources/
+│   └── fabric.mod.json
+├── build.gradle
+└── gradle.properties</code></pre>
+
+      <div class="separator"></div>
+
+      <p>Tras esto, puedes continuar a la siguiente página: <strong>Triggers Custom</strong>.</p>
+
+      <div class="separator"></div>
+    </div>
+
+    <div id="triggers-custom" class="tab-content" style="display: none;">
+      <h2><img src="assets/message-square-code.svg" alt="Custom Triggers" width="24" height="24">Triggers Custom</h2>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Clase cliente básica</h4>
+
+      <p>Ahora creas tu clase cliente que va a registrar los triggers. Aquí tienes que hacer esto paso a paso:</p>
+
+      <pre><code>package tu.paquete.client;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.minecraft.client.MinecraftClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+// Las importaciones del mod (estas son las que necesitas)
+import hub.itemfirstpersonanimationshexa.client.api.CustomTriggerApi;
+import hub.itemfirstpersonanimationshexa.client.events.TriggerEvents;
+
+public class TuModClient implements ClientModInitializer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("TuMod");
+
+    @Override
+    public void onInitializeClient() {
+        LOGGER.info("Iniciando tu mod");
+
+        // IMPORTANTE: Tiene que ser en CLIENT_STARTED, no en onInitializeClient
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            registrarTriggers();
+        });
+    }
+
+    private void registrarTriggers() {
+        // Aquí es donde pones tus triggers
+    }
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Cómo registrar un trigger custom</h4>
+
+      <p>Para registrar un trigger, lo haces en la función <code>registrarTriggers()</code>:</p>
+
+      <pre><code>private void registrarTriggers() {
+    try {
+        // 1. Registrar el trigger
+        boolean registrado = CustomTriggerApi.registerTrigger(
+            "mi_trigger_salto",          // Nombre del trigger (usa prefijo de tu mod)
+            this::estaJugadorSaltando,   // Tu función que verifica la condición
+            "Trigger cuando salta",     // Descripción
+            "tu_mod_id"                 // ID de tu mod
+        );
+
+        if (registrado) {
+            LOGGER.info("✅ Trigger registrado correctamente");
+        } else {
+            LOGGER.warn("❌ No se pudo registrar el trigger");
+        }
+
+        // 2. Registrar el handler (lo que pasa cuando se activa)
+        TriggerEvents.registerTriggerHandler("mi_trigger_salto", context -> {
+            LOGGER.info("🎯 ¡Se activó el trigger de salto!");
+            LOGGER.info("Item: {}", context.getItemStack().getItem().getName().getString());
+        });
+
+    } catch (Exception e) {
+        LOGGER.error("Error registrando triggers", e);
+    }
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Función de verificación del trigger</h4>
+
+      <p>Esta es la función que verifica si tu trigger debe estar activo. Se ejecuta todo el tiempo, así que hazla rápida:</p>
+
+      <pre><code>private boolean estaJugadorSaltando() {
+    MinecraftClient client = MinecraftClient.getInstance();
+
+    // SIEMPRE verifica nulls primero
+    if (client == null || client.player == null) {
+        return false;
+    }
+
+    // Tu condición específica
+    return !client.player.isOnGround() && client.player.getVelocity().y > 0.05;
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Triggers comunes que puedes usar</h4>
+
+      <h5>Vida baja</h5>
+      <pre><code>private boolean tieneVidaBaja() {
+    MinecraftClient client = MinecraftClient.getInstance();
+    if (client == null || client.player == null) return false;
+
+    return client.player.getHealth() <= 6.0f; // 3 corazones
+}</code></pre>
+
+      <div class="separator"></div>
+
+      <h5>Corriendo rápido</h5>
+      <pre><code>private boolean corriendo() {
+    MinecraftClient client = MinecraftClient.getInstance();
+    if (client == null || client.player == null) return false;
+
+    double velocidad = client.player.getVelocity().horizontalLength();
+    return velocidad > 0.3;
+}</code></pre>
+
+      <div class="separator"></div>
+
+      <h5>Agachado</h5>
+      <pre><code>private boolean estaAgachado() {
+    MinecraftClient client = MinecraftClient.getInstance();
+    if (client == null || client.player == null) return false;
+
+    return client.player.isSneaking();
+}</code></pre>
+
+      <div class="separator"></div>
+
+      <h5>En agua</h5>
+      <pre><code>private boolean enAgua() {
+    MinecraftClient client = MinecraftClient.getInstance();
+    if (client == null || client.player == null) return false;
+
+    return client.player.isSubmergedInWater();
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <p><strong>Importante:</strong> El nombre del trigger que registres aquí (ej: "mi_trigger_salto") es el que va a usar el usuario en su <code>animation_config.json</code> en la propiedad "trigger".</p>
+
+      <div class="separator"></div>
+
+      <p>Concluido esto, pueden ir a la siguiente pagina llamada <strong>Ejemplos</strong>.</p>
+
+      <div class="separator"></div>
+    </div>
+
+    <div id="ejemplos" class="tab-content" style="display: none;">
+      <h2><img src="assets/layers.svg" alt="Examples" width="24" height="24">Ejemplos</h2>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Ejemplo completo: Mod de armas</h4>
+
+      <p>Este es un ejemplo completo de cómo harías un mod que agrega triggers para armas:</p>
+
+      <pre><code>package tu.paquete.client;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.minecraft.client.MinecraftClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import hub.itemfirstpersonanimationshexa.client.api.CustomTriggerApi;
+import hub.itemfirstpersonanimationshexa.client.events.TriggerEvents;
+
+public class ArmasModClient implements ClientModInitializer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("ArmasMod");
+    private static long ultimoAtaque = 0;
+    private static int contadorCombo = 0;
+
+    @Override
+    public void onInitializeClient() {
+        LOGGER.info("Iniciando Mod de Armas");
+
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            registrarTriggersDeArmas();
+        });
+    }
+
+    private void registrarTriggersDeArmas() {
+        try {
+            // Trigger para recarga de arma
+            CustomTriggerApi.registerTrigger(
+                "armas_recarga",
+                this::estaRecargando,
+                "Trigger para recargar armas",
+                "armas_mod"
+            );
+
+            // Trigger para combo de ataques
+            CustomTriggerApi.registerTrigger(
+                "armas_combo",
+                this::enCombo,
+                "Trigger para combo de ataques",
+                "armas_mod"
+            );
+
+            // Trigger para vida critica con arma
+            CustomTriggerApi.registerTrigger(
+                "armas_vida_critica",
+                this::vidaCriticaConArma,
+                "Trigger para vida critica",
+                "armas_mod"
+            );
+
+            // Handlers para cada trigger
+            TriggerEvents.registerTriggerHandler("armas_recarga", context -> {
+                LOGGER.info("🔄 Recargando arma: {}",
+                          context.getItemStack().getItem().getName().getString());
+            });
+
+            TriggerEvents.registerTriggerHandler("armas_combo", context -> {
+                LOGGER.info("⚔️ Combo activado! Count: {}", contadorCombo);
+            });
+
+            TriggerEvents.registerTriggerHandler("armas_vida_critica", context -> {
+                LOGGER.info("💀 Vida critica con arma detectada");
+            });
+
+            LOGGER.info("✅ Todos los triggers de armas registrados");
+
+        } catch (Exception e) {
+            LOGGER.error("Error registrando triggers de armas", e);
+        }
+    }
+
+    private boolean estaRecargando() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client == null || client.player == null) return false;
+
+        // Ejemplo: R presionada + tiene arma en mano
+        return client.options.chatKey.isPressed() && // Cambiar por tu tecla
+               esArma(client.player.getMainHandStack());
+    }
+
+    private boolean enCombo() {
+        long tiempoActual = System.currentTimeMillis();
+        // Combo si han pasado menos de 1 segundo entre ataques y hay 3+ ataques
+        return (tiempoActual - ultimoAtaque) < 1000 && contadorCombo >= 3;
+    }
+
+    private boolean vidaCriticaConArma() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client == null || client.player == null) return false;
+
+        return client.player.getHealth() <= 4.0f &&
+               esArma(client.player.getMainHandStack());
+    }
+
+    private boolean esArma(net.minecraft.item.ItemStack stack) {
+        if (stack.isEmpty()) return false;
+
+        String itemName = stack.getItem().getName().getString().toLowerCase();
+        return itemName.contains("sword") ||
+               itemName.contains("axe") ||
+               itemName.contains("bow");
+    }
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Cómo lo usa el usuario</h4>
+
+      <p>Después de que registres tus triggers, el usuario puede usarlos en su <code>animation_config.json</code> así:</p>
+
+      <pre><code>{
+  "animations": {
+    "espada_recarga": {
+      "item": "diamond_sword",
+      "trigger": "armas_recarga",
+      "animation_file": "animations/recarga_espada.animation.json",
+      "geo_file": "geo/espada.geo.json",
+      "custom_model_data": 1
+    },
+    "espada_combo": {
+      "item": "diamond_sword",
+      "trigger": "armas_combo",
+      "animation_file": "animations/combo_espada.animation.json",
+      "geo_file": "geo/espada.geo.json",
+      "custom_model_data": 1
+    }
+  }
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Debugging y verificación</h4>
+
+      <p>Para verificar que todo funciona, puedes agregar esto a tu mod:</p>
+
+      <pre><code>// En registrarTriggersDeArmas(), al final
+private void verificarEstado() {
+    LOGGER.info("=== ESTADO DE MIS TRIGGERS ===");
+
+    String[] misTriggers = {"armas_recarga", "armas_combo", "armas_vida_critica"};
+
+    for (String trigger : misTriggers) {
+        boolean registrado = CustomTriggerApi.isTriggerRegistered(trigger);
+        boolean activo = CustomTriggerApi.isTriggerActive(trigger);
+
+        LOGGER.info("{} - Registrado: {} | Activo: {}",
+                   trigger, registrado, activo);
+    }
+
+    LOGGER.info("Total triggers registrados: {}",
+               CustomTriggerApi.getRegisteredTriggersCount());
+}</code></pre>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <h4>Errores comunes y soluciones</h4>
+
+      <h5>El trigger no se registra</h5>
+      <p>- Verifica que el nombre no esté ya usado por otro mod</p>
+      <p>- Asegúrate de que CustomTriggerApi.registerTrigger retorne true</p>
+
+      <div class="separator"></div>
+
+      <h5>El trigger se registra pero no se activa</h5>
+      <p>- Revisa tu función de verificación con logs de debug</p>
+      <p>- Asegúrate de que la condición sea correcta</p>
+
+      <div class="separator"></div>
+
+      <h5>Se activa pero no hay animación</h5>
+      <p>- Verifica que el usuario tenga bien configurado su animation_config.json</p>
+      <p>- El nombre del trigger debe ser exactamente igual</p>
+
+      <div class="separator"></div>
+      <div class="separator"></div>
+
+      <p>Con esto ya tienes todo lo que necesitas para crear triggers custom para animaciones 👍</p>
+
+      <div class="separator"></div>
+    </div>
+  </div>
+</div>
+
+<div class="separator"></div>
+<div class="separator"></div>
+<div class="separator"></div>
+<div class="separator"></div>
+
+<script src="js/app.js"></script>
 
 </body>
 
